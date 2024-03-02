@@ -9,6 +9,6 @@ public class TransferAssetsRequest {
 	private String fromRoutingNumber;
 	private String toAccountNumber;
 	private String toRoutingNumber;
-	private float amount;
+	private double amount;
 	
 }

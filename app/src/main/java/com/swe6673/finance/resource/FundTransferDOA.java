@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class FundTransferDOA {
 
-	private float amount;
+	private double amount;
 	private String accountNumber;
 	private String routingNumber;
 	
