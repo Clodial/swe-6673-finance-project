@@ -1,7 +1,6 @@
 package com.swe6673.finance.impl;
 
 import com.swe6673.finance.resource.AccountCreationRequest;
-import com.swe6673.finance.resource.AccountType;
 import com.swe6673.finance.resource.BankAccount;
 import com.swe6673.finance.resource.CloseAccountRequest;
 import com.swe6673.finance.resource.FundTransferDOA;
@@ -11,37 +10,37 @@ import com.swe6673.finance.service.FinanceAppService;
 public class FinanceAppServiceImplementation implements FinanceAppService {
 
 	@Override
-	public String createAccount(AccountCreationRequest request) {
+	public String createBankAccount(AccountCreationRequest request) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public BankAccount getAccountDetails(String accountNumber) {
+	public BankAccount getBankAccountDetails(String accountNumber) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean closeAccount(CloseAccountRequest closeAcctRqst) {
+	public boolean closeBankAccount(CloseAccountRequest closeAcctRqst) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public BankAccount addFunds(FundTransferDOA fundDeposit) {
+	public BankAccount depositBankFunds(FundTransferDOA fundDeposit) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public BankAccount withdrawFunds(FundTransferDOA fundWithdraw) {
+	public BankAccount withdrawBankFunds(FundTransferDOA fundWithdraw) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public BankAccount accountTransfer(TransferAssetsRequest request) {
+	public BankAccount bankAccountTransfer(TransferAssetsRequest request) {
 		// TODO Auto-generated method stub
 		return null;
 	}

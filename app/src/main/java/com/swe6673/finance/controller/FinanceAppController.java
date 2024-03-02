@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swe6673.finance.resource.AccountCreationRequest;
-import com.swe6673.finance.resource.AccountType;
 import com.swe6673.finance.resource.BankAccount;
 import com.swe6673.finance.resource.CloseAccountRequest;
 import com.swe6673.finance.resource.FundTransferDOA;
@@ -26,36 +25,36 @@ public class FinanceAppController {
 	public ResponseEntity<String> accountCreation(
 			@RequestBody AccountCreationRequest request) {
 		return ResponseEntity.ok(
-				financeApp.createAccount(request));
+				financeApp.createBankAccount(request));
 	}
 	
 	@PostMapping("/transferassets")
 	public ResponseEntity<BankAccount> accountTransferAssets(@RequestBody TransferAssetsRequest request) {
-		return ResponseEntity.ok(financeApp.accountTransfer(request));
+		return ResponseEntity.ok(financeApp.bankAccountTransfer(request));
 	}
 	
 	@GetMapping("/getdetails/{accountNumber}")
 	public ResponseEntity<BankAccount> accountGetDetails(
 			@PathVariable("accountNumber") String accountNumber) {
-		return ResponseEntity.ok(financeApp.getAccountDetails(accountNumber));
+		return ResponseEntity.ok(financeApp.getBankAccountDetails(accountNumber));
 	}
 	
 	@PostMapping("/closeaccount")
 	public ResponseEntity<Boolean> accountClose(
 			@RequestBody CloseAccountRequest closeAcctRqst) {
-		return ResponseEntity.ok(financeApp.closeAccount(closeAcctRqst));
+		return ResponseEntity.ok(financeApp.closeBankAccount(closeAcctRqst));
 	}
 	
 	@PostMapping("/addfunds")
 	public ResponseEntity<BankAccount> accountDepositFunds(
 			@RequestBody FundTransferDOA fundDeposit) {
-		return ResponseEntity.ok(financeApp.addFunds(fundDeposit));
+		return ResponseEntity.ok(financeApp.depositBankFunds(fundDeposit));
 	}
 	
 	@PostMapping("/withdrawfunds")
 	public ResponseEntity<BankAccount> accountWithdrawFunds(
 			@RequestBody FundTransferDOA fundWithdraw) {
-		return ResponseEntity.ok(financeApp.withdrawFunds(fundWithdraw));
+		return ResponseEntity.ok(financeApp.withdrawBankFunds(fundWithdraw));
 	}
 	
 }
