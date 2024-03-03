@@ -20,7 +20,7 @@ public class UserTestBuilder {
         private String userId = "124322";
         private String firstName = "Matos";
         private String lastName = "Project";
-        private String emailAddress = "matos@project.come";
+        private String emailAddress = "matos@project.com";
         private String password = "Admin_123";
     }
 }

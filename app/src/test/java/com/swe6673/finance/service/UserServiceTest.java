@@ -29,7 +29,7 @@ public class UserServiceTest {
 
     @Test
     public void testGetUser(){
-        User user = new User("124322", "matos", "cloud", "matos@cloud.com", "Admin_123");
+        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.findById(mockedUser.getUserId()));
@@ -39,7 +39,7 @@ public class UserServiceTest {
 
     @Test
     public void testAddNewUser(){
-        User user = new User("124322", "matos", "cloud", "matos@cloud.com", "Admin_123");
+        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.save(mockedUser));
@@ -49,7 +49,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUser(){
-        User user = new User("124322", "matos", "cloud", "matos@cloud.com", "Admin_123");
+        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.save(mockedUser));
@@ -59,7 +59,7 @@ public class UserServiceTest {
 
     @Test
     public void testDeleteUser(){
-        User user = new User("124322", "matos", "cloud", "matos@cloud.com", "Admin_123");
+        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
 
@@ -69,7 +69,7 @@ public class UserServiceTest {
 
     @Test
     public void testLoginUser(){
-        User user = new User("124322", "matos", "cloud", "matos@cloud.com", "Admin_123");
+        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         UserDTO userDTO = new UserDTO();
