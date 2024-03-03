@@ -13,8 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.swe6673.finance.repository.BankRepository;
 import com.swe6673.finance.resource.AccountCreationRequest;
 import com.swe6673.finance.resource.AccountStatus;
@@ -26,7 +24,6 @@ import com.swe6673.finance.resource.TransferAssetsRequest;
 
 public class FinanceAppServiceImplementationTest {
 
-	@Autowired
 	@InjectMocks
 	public FinanceAppServiceImplementation financeService;
 	
@@ -109,12 +106,6 @@ public class FinanceAppServiceImplementationTest {
 						badRequest.getAmount(), 
 						AccountType.CHECKING, 
 						AccountStatus.OPEN);
-		new BankAccount(
-				badRequest.getToAccountNumber(), 
-				badRequest.getToRoutingNumber(), 
-				badRequest.getAmount(), 
-				AccountType.CHECKING, 
-				AccountStatus.OPEN);
 		when(bankRepo.findById(badRequest.getFromAccountNumber())).thenThrow(Exception.class);
 		when(bankRepo.save(incomingAccount)).thenThrow(Exception.class);
 		try {
@@ -128,12 +119,6 @@ public class FinanceAppServiceImplementationTest {
 	@Test
 	public void testFailNullOutgoingBankTransfer() throws Exception {
 		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", null, null, 0.0);
-		new BankAccount(
-				badRequest.getFromAccountNumber(), 
-				badRequest.getFromRoutingNumber(), 
-				badRequest.getAmount(), 
-				AccountType.CHECKING, 
-				AccountStatus.OPEN);
 		BankAccount outgoingAccount = 
 				new BankAccount(
 						badRequest.getToAccountNumber(), 
@@ -154,12 +139,6 @@ public class FinanceAppServiceImplementationTest {
 	@Test
 	public void testFailInvalidBankTransfer() throws Exception {
 		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", "1234", "1234", 0.0);
-		new BankAccount(
-				badRequest.getFromAccountNumber(), 
-				badRequest.getFromRoutingNumber(), 
-				badRequest.getAmount(), 
-				AccountType.CHECKING, 
-				AccountStatus.OPEN);
 		BankAccount outgoingAccount = 
 				new BankAccount(
 						badRequest.getToAccountNumber(), 
@@ -179,12 +158,6 @@ public class FinanceAppServiceImplementationTest {
 	@Test
 	public void testFailInvalidMoneyBankTransfer() throws Exception {
 		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", -10.0);
-		new BankAccount(
-				badRequest.getFromAccountNumber(), 
-				badRequest.getFromRoutingNumber(), 
-				0.0, 
-				AccountType.CHECKING, 
-				AccountStatus.OPEN);
 		BankAccount outgoingAccount = 
 				new BankAccount(
 						badRequest.getToAccountNumber(), 
@@ -204,12 +177,6 @@ public class FinanceAppServiceImplementationTest {
 	@Test
 	public void testFailInvalidNoMoneyBankTransfer() throws Exception {
 		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 0.0);
-		new BankAccount(
-				badRequest.getFromAccountNumber(), 
-				badRequest.getFromRoutingNumber(), 
-				0.0, 
-				AccountType.CHECKING, 
-				AccountStatus.OPEN);
 		BankAccount outgoingAccount = 
 				new BankAccount(
 						badRequest.getToAccountNumber(), 
