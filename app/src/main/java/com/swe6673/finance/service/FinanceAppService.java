@@ -1,14 +1,21 @@
 package com.swe6673.finance.service;
 
+import com.swe6673.finance.resource.AccountCreationRequest;
 import com.swe6673.finance.resource.AccountType;
 import com.swe6673.finance.resource.BankAccount;
+import com.swe6673.finance.resource.CloseAccountRequest;
+import com.swe6673.finance.resource.FundTransferDOA;
+import com.swe6673.finance.resource.TransferAssetsRequest;
 
 public interface FinanceAppService {
 
-	public String createAccount(float amount, AccountType type);
-	public BankAccount getAccountDetails(String accountNumber);
-	public boolean closeAccount(String accountNumber);
-	public BankAccount addFunds(float amount, String accountNumber, String routingNumber);
-	public BankAccount withdrawFunds(float amount, String accountNumber, String routingNumber);
+	public String createBankAccount(AccountCreationRequest request);
+	public BankAccount bankAccountTransfer(TransferAssetsRequest request);
+	public BankAccount getBankAccountDetails(String accountNumber);
+	public boolean closeBankAccount(CloseAccountRequest closeAcctRqst);
+	public BankAccount depositBankFunds(FundTransferDOA fundDeposit);
+	public BankAccount withdrawBankFunds(FundTransferDOA fundWithdrawal);
+	public String generateAccountNumber();
+	public String generateRoutingNumber();
 	
 }
