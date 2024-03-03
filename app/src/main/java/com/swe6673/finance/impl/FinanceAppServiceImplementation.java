@@ -1,5 +1,6 @@
 package com.swe6673.finance.impl;
 
+import com.swe6673.finance.repository.BankRepository;
 import com.swe6673.finance.resource.AccountCreationRequest;
 import com.swe6673.finance.resource.BankAccount;
 import com.swe6673.finance.resource.CloseAccountRequest;
@@ -8,6 +9,12 @@ import com.swe6673.finance.resource.TransferAssetsRequest;
 import com.swe6673.finance.service.FinanceAppService;
 
 public class FinanceAppServiceImplementation implements FinanceAppService {
+	
+	public final BankRepository bankRepo;
+	
+	public FinanceAppServiceImplementation(BankRepository bankRepo) {
+		this.bankRepo = bankRepo;
+	}
 
 	@Override
 	public String createBankAccount(AccountCreationRequest request) {
@@ -45,4 +52,14 @@ public class FinanceAppServiceImplementation implements FinanceAppService {
 		return null;
 	}
 
+	@Override
+	public String generateAccountNumber() {
+		return "1";
+	}
+	
+	@Override
+	public String generateRoutingNumber() {
+		return "1";
+	}
+	
 }

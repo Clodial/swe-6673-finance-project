@@ -15,5 +15,7 @@ public interface FinanceAppService {
 	public boolean closeBankAccount(CloseAccountRequest closeAcctRqst);
 	public BankAccount depositBankFunds(FundTransferDOA fundDeposit);
 	public BankAccount withdrawBankFunds(FundTransferDOA fundWithdrawal);
+	public String generateAccountNumber();
+	public String generateRoutingNumber();
 	
 }

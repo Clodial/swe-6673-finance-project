@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.swe6673.finance.resource.AccountCreationRequest;
@@ -16,6 +17,7 @@ import com.swe6673.finance.resource.TransferAssetsRequest;
 import com.swe6673.finance.service.FinanceAppService;
 
 @RestController
+@RequestMapping(path="api/bank")
 public class FinanceAppController {
 
 	@Autowired
@@ -29,7 +31,8 @@ public class FinanceAppController {
 	}
 	
 	@PostMapping("/transferassets")
-	public ResponseEntity<BankAccount> accountTransferAssets(@RequestBody TransferAssetsRequest request) {
+	public ResponseEntity<BankAccount> accountTransferAssets(
+			@RequestBody TransferAssetsRequest request) {
 		return ResponseEntity.ok(financeApp.bankAccountTransfer(request));
 	}
 	
