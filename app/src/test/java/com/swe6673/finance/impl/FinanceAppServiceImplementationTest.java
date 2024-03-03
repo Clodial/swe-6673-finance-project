@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.swe6673.finance.resource.AccountCreationRequest;
 import com.swe6673.finance.resource.AccountStatus;
@@ -13,6 +14,7 @@ import com.swe6673.finance.resource.BankAccount;
 
 public class FinanceAppServiceImplementationTest {
 
+	@Autowired
 	FinanceAppServiceImplementation financeService;
 	
 	@Test
@@ -21,7 +23,7 @@ public class FinanceAppServiceImplementationTest {
 		try {
 			financeService.createBankAccount(badAccount);
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Unable to create account");
+			assertEquals(e.getMessage(), "Bank Account cannot start with a negative balance");
 		}
 	}
 	
@@ -31,7 +33,7 @@ public class FinanceAppServiceImplementationTest {
 		try {
 			financeService.createBankAccount(badAccount);
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Unable to create account");
+			assertEquals(e.getMessage(), "Bank Account Type is not provided");
 		}
 	}
 	
@@ -57,6 +59,78 @@ public class FinanceAppServiceImplementationTest {
 		}
 	}
 	
-	public void test
+	@Test
+	public void testFailNullBankTransfer() throws Exception {
+		
+	}
 	
+	@Test
+	public void testFailInvalidBankTransfer() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSuccessBankTransfer() throws Exception {
+		
+	}
+	
+	@Test
+	public void testFailInvalidBankDetails() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSuccessBankDetails() throws Exception{
+		
+	}
+	
+	@Test
+	public void testFailInvalidRoutingCloseAccount() throws Exception {
+		
+	}
+	
+	@Test
+	public void testFailInvalidaccNumberCloseAccount() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSuccessCloseAccount() throws Exception {
+		
+	}
+	
+	@Test
+	public void testFailInvalidDepositBank() throws Exception {
+		
+	}
+	
+	@Test
+	public void testFailNegativeMoneyDepositBank() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSuccessDepositDepositBank() throws Exception {
+		
+	}
+	
+	@Test
+	public void testFailInvalidWithdrawBank() throws Exception {
+		
+	}
+	
+	@Test
+	public void testFailNegativeWithdrawBank() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSuccessOverdraftWithdrawBank() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSuccessNormalWithdrawBank() throws Exception {
+		
+	}
 }
