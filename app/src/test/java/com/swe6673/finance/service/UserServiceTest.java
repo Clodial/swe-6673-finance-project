@@ -28,8 +28,8 @@ public class UserServiceTest {
     private ModelMapper modelMapper;
 
     @Test
-    public void testGetUser(){
-        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
+    public void testGetUserSuccessfully(){
+        User user = new User("124322", "matos", "Project", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.findById(mockedUser.getUserId()));
@@ -38,46 +38,96 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddNewUser(){
-        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
+    public void testGetUserFail(){
+        User user = new User(null, "matos", "cloud", "matos@project.com", "Admin_123");
+
+        User mockedUser = UserTestBuilder.builder().userId("124322").build();
+        Mockito.when(userRepository.findById(mockedUser.getUserId()));
+        userService.getUser(user.getUserId());
+        assertEquals(mockedUser, user, "Invalid user Id");
+    }
+    @Test
+    public void testAddNewUserSuccessfully(){
+        User user = new User("124322", "matos", "Project", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.save(mockedUser));
-        userService.createUser(mockedUser);
+        userService.createUser(user);
         assertEquals(mockedUser, user);
     }
 
     @Test
-    public void testUpdateUser(){
-        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
+    public void testAddNewUserFail(){
+        User user = new User(null, null, null, "matos@project.com", Admin_123);
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.save(mockedUser));
-        userService.updateUser(mockedUser);
-        assertEquals(mockedUser, user);
+        userService.createUser(user);
+        assertEquals(mockedUser, user, "Invalid data and data type");
     }
 
     @Test
-    public void testDeleteUser(){
-        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
+    public void testUpdateUserSuccessfully(){
+        User user = new User("124322", "matos", "Project", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
-
-        userService.deleteUser(mockedUser.getUserId());
+        Mockito.when(userRepository.save(mockedUser));
+        userService.updateUser(user);
         assertEquals(mockedUser, user);
     }
 
     @Test
-    public void testLoginUser(){
-        User user = new User("124322", "matos", "cloud", "matos@project.com", "Admin_123");
+    public void testUpdateUserFail(){
+        User user = new User(124322, "matos", "cloud", "matos@project.com", "Admin_123");
+
+        User mockedUser = UserTestBuilder.builder().userId("124322").build();
+        Mockito.when(userRepository.save(mockedUser));
+        userService.updateUser(user);
+        assertEquals(mockedUser, user, "Invalid user id and data type");
+    }
+
+    @Test
+    public void testDeleteUserSuccessfully(){
+        User user = new User("124322", "matos", "Project", "matos@project.com", "Admin_123");
+
+        User mockedUser = UserTestBuilder.builder().userId("124322").build();
+        userService.deleteUser(user.getUserId());
+        assertEquals(mockedUser, user);
+    }
+
+    @Test
+    public void testDeleteUserFail(){
+        User user = new User(null, "matos", "cloud", "matos@project.com", "Admin_123");
+
+        User mockedUser = UserTestBuilder.builder().userId("124322").build();
+        userService.deleteUser(user.getUserId());
+        assertEquals(mockedUser, user, "Invalid User Id");
+    }
+
+    @Test
+    public void testLoginUserSuccessfully(){
+        User user = new User("124322", "matos", "Project", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         UserDTO userDTO = new UserDTO();
-        userDTO.setEmail(mockedUser.getEmailAddress());
-        userDTO.setPassword(mockedUser.getPassword());
+        userDTO.setEmail(user.getEmailAddress());
+        userDTO.setPassword(user.getPassword());
 
         userService.login(userDTO);
         assertEquals(mockedUser, user);
+    }
+
+    @Test
+    public void testLoginUserFail(){
+        User user = new User(null, "matos", "cloud", null, null);
+
+        User mockedUser = UserTestBuilder.builder().userId("124322").build();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setEmail(user.getEmailAddress());
+        userDTO.setPassword(user.getPassword());
+
+        userService.login(userDTO);
+        assertEquals(mockedUser, user, "Invalid username and password");
     }
 
 }
