@@ -34,7 +34,7 @@ public class UserControllerTest {
 
     @Test
     public void shouldFailCreateNewUser() throws Exception{
-        User mockedUser = UserTestBuilder.builder().userId(-124322).build();
+        User mockedUser = UserTestBuilder.builder().userId(null).build();
         this.mockMvc.perform(post(API_URLPATH, mockedUser)).andExpect(status().is5xxServerError());
     }
 

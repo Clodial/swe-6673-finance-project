@@ -58,7 +58,7 @@ public class UserServiceTest {
 
     @Test
     public void testAddNewUserFail(){
-        User user = new User(null, null, null, "matos@project.com", Admin_123);
+        User user = new User(null, null, null, "matos@project.com", null);
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.save(mockedUser));
@@ -78,7 +78,7 @@ public class UserServiceTest {
 
     @Test
     public void testUpdateUserFail(){
-        User user = new User(124322, "matos", "cloud", "matos@project.com", "Admin_123");
+        User user = new User(null, "matos", "cloud", "matos@project.com", "Admin_123");
 
         User mockedUser = UserTestBuilder.builder().userId("124322").build();
         Mockito.when(userRepository.save(mockedUser));
