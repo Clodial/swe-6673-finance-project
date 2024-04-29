@@ -1,18 +1,17 @@
 package com.swe6673.finance.resource;
 
+import org.springframework.data.annotation.Id;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
 
 @Data
 @AllArgsConstructor
-public class BankAccount {
-	
+public class FundTransferDOA {
+
+	private double amount;
 	@Id
 	private String accountNumber;
 	private String routingNumber;
-	private double assetHoldings;
-	private AccountType type;
-	private AccountStatus status;
 	
 }
