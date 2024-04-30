@@ -6,12 +6,18 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import com.swe6673.finance.repository.BankRepository;
 import com.swe6673.finance.resource.AccountCreationRequest;
@@ -22,8 +28,10 @@ import com.swe6673.finance.resource.CloseAccountRequest;
 import com.swe6673.finance.resource.FundTransferDOA;
 import com.swe6673.finance.resource.TransferAssetsRequest;
 
+@ExtendWith(MockitoExtension.class)
 public class FinanceAppServiceImplementationTest {
 
+	@Spy
 	@InjectMocks
 	public FinanceAppServiceImplementation financeService;
 	
@@ -106,8 +114,9 @@ public class FinanceAppServiceImplementationTest {
 						badRequest.getAmount(), 
 						AccountType.CHECKING, 
 						AccountStatus.OPEN);
-		when(bankRepo.findById(badRequest.getFromAccountNumber())).thenThrow(Exception.class);
-		when(bankRepo.save(incomingAccount)).thenThrow(Exception.class);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(incomingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
 		try {
 			financeService.bankAccountTransfer(badRequest);
 			fail();
@@ -126,8 +135,9 @@ public class FinanceAppServiceImplementationTest {
 						badRequest.getAmount(), 
 						AccountType.CHECKING, 
 						AccountStatus.OPEN);
-		when(bankRepo.findById(badRequest.getToAccountNumber())).thenThrow(Exception.class);
-		when(bankRepo.save(outgoingAccount)).thenThrow(Exception.class);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(outgoingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
 		try {
 			financeService.bankAccountTransfer(badRequest);
 			fail();
@@ -146,7 +156,9 @@ public class FinanceAppServiceImplementationTest {
 						badRequest.getAmount(), 
 						AccountType.CHECKING, 
 						AccountStatus.OPEN);
-		when(bankRepo.save(outgoingAccount)).thenThrow(Exception.class);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(outgoingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
 		try {
 			financeService.bankAccountTransfer(badRequest);
 			fail();
@@ -165,7 +177,9 @@ public class FinanceAppServiceImplementationTest {
 						badRequest.getAmount(), 
 						AccountType.CHECKING, 
 						AccountStatus.OPEN);
-		when(bankRepo.save(outgoingAccount)).thenThrow(Exception.class);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(outgoingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
 		try {
 			financeService.bankAccountTransfer(badRequest);
 			fail();
@@ -176,15 +190,17 @@ public class FinanceAppServiceImplementationTest {
 	
 	@Test
 	public void testFailInvalidNoMoneyBankTransfer() throws Exception {
-		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 0.0);
 		BankAccount outgoingAccount = 
 				new BankAccount(
-						badRequest.getToAccountNumber(), 
-						badRequest.getToRoutingNumber(), 
-						badRequest.getAmount(), 
+						"1234", 
+						"1234", 
+						0.0, 
 						AccountType.CHECKING, 
 						AccountStatus.OPEN);
-		when(bankRepo.save(outgoingAccount)).thenThrow(Exception.class);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(outgoingAccount);
+		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 0.0);
+		when(bankRepo.findAll()).thenReturn(accounts);
 		try {
 			financeService.bankAccountTransfer(badRequest);
 			fail();
@@ -194,11 +210,74 @@ public class FinanceAppServiceImplementationTest {
 	}
 	
 	@Test
+	public void testFailClosedBankTransfer() throws Exception {
+		BankAccount mockIncomingAccount = new BankAccount("1234", "1234", 0.0, AccountType.CHECKING, AccountStatus.OPEN);
+		BankAccount outgoingAccount = 
+				new BankAccount(
+						"1234", 
+						"1234", 
+						0.0, 
+						AccountType.CHECKING, 
+						AccountStatus.CLOSED);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(mockIncomingAccount);
+		accounts.add(outgoingAccount);
+		TransferAssetsRequest badRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 10.0);
+		when(bankRepo.findAll()).thenReturn(accounts);
+		try {
+			financeService.bankAccountTransfer(badRequest);
+			fail();
+		} catch(Exception e) {
+			assertEquals(e.getMessage(), "Cannot transfer assets with a closed account");
+		}
+	}
+	
+	@Test
 	public void testSuccessBankTransfer() throws Exception {
 		TransferAssetsRequest goodRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 10.0);
-		new BankAccount("1234", "1234", 0.0, AccountType.CHECKING, AccountStatus.OPEN);
+		BankAccount mockIncomingAccount = new BankAccount("1234", "1234", 0.0, AccountType.CHECKING, AccountStatus.OPEN);
 		BankAccount mockOutgoingAccount = 
 				new BankAccount("1235", "1235", 10.0, AccountType.CHECKING, AccountStatus.OPEN);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(mockOutgoingAccount);
+		accounts.add(mockIncomingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
+		try {
+			BankAccount updatedAccount = financeService.bankAccountTransfer(goodRequest);
+			assertEquals(updatedAccount.getAssetHoldings(), mockOutgoingAccount.getAssetHoldings());
+		} catch(Exception e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testSuccessCheckingSavingsBankTransfer() throws Exception {
+		TransferAssetsRequest goodRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 10.0);
+		BankAccount mockIncomingAccount = new BankAccount("1234", "1234", 0.0, AccountType.CHECKING, AccountStatus.OPEN);
+		BankAccount mockOutgoingAccount = 
+				new BankAccount("1235", "1235", 10.0, AccountType.SAVINGS, AccountStatus.OPEN);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(mockOutgoingAccount);
+		accounts.add(mockIncomingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
+		try {
+			BankAccount updatedAccount = financeService.bankAccountTransfer(goodRequest);
+			assertEquals(updatedAccount.getAssetHoldings(), mockOutgoingAccount.getAssetHoldings());
+		} catch(Exception e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testSuccessSavingsSavingsBankTransfer() throws Exception {
+		TransferAssetsRequest goodRequest = new TransferAssetsRequest("1234", "1234", "1235", "1235", 10.0);
+		BankAccount mockIncomingAccount = new BankAccount("1234", "1234", 0.0, AccountType.SAVINGS, AccountStatus.OPEN);
+		BankAccount mockOutgoingAccount = 
+				new BankAccount("1235", "1235", 10.0, AccountType.SAVINGS, AccountStatus.OPEN);
+		List<BankAccount> accounts = new ArrayList();
+		accounts.add(mockOutgoingAccount);
+		accounts.add(mockIncomingAccount);
+		when(bankRepo.findAll()).thenReturn(accounts);
 		try {
 			BankAccount updatedAccount = financeService.bankAccountTransfer(goodRequest);
 			assertEquals(updatedAccount.getAssetHoldings(), mockOutgoingAccount.getAssetHoldings());
@@ -237,7 +316,53 @@ public class FinanceAppServiceImplementationTest {
 						);
 		when(bankRepo.findById("1234")).thenReturn(account);
 		try {
-			financeService.getBankAccountDetails("1234");
+			BankAccount incomingDetails = financeService.getBankAccountDetails("1234");
+			assertEquals(incomingDetails.getAssetHoldings(), account.get().getAssetHoldings());
+		} catch(Exception e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testSuccessCheckingClosedBankDetails() throws Exception{
+		Optional<BankAccount> account = 
+				Optional.of(
+						new BankAccount("1234", "1234", 0.0, AccountType.CHECKING, AccountStatus.CLOSED)
+						);
+		when(bankRepo.findById("1234")).thenReturn(account);
+		try {
+			BankAccount incomingDetails = financeService.getBankAccountDetails("1234");
+			assertEquals(incomingDetails.getAssetHoldings(), account.get().getAssetHoldings());
+		} catch(Exception e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testSuccessSavingsOpenBankDetails() throws Exception{
+		Optional<BankAccount> account = 
+				Optional.of(
+						new BankAccount("1234", "1234", 0.0, AccountType.SAVINGS, AccountStatus.OPEN)
+						);
+		when(bankRepo.findById("1234")).thenReturn(account);
+		try {
+			BankAccount incomingDetails = financeService.getBankAccountDetails("1234");
+			assertEquals(incomingDetails.getAssetHoldings(), account.get().getAssetHoldings());
+		} catch(Exception e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testSuccessSavingsClosedBankDetails() throws Exception{
+		Optional<BankAccount> account = 
+				Optional.of(
+						new BankAccount("1234", "1234", 0.0, AccountType.SAVINGS, AccountStatus.CLOSED)
+						);
+		when(bankRepo.findById("1234")).thenReturn(account);
+		try {
+			BankAccount incomingDetails = financeService.getBankAccountDetails("1234");
+			assertEquals(incomingDetails.getAssetHoldings(), account.get().getAssetHoldings());
 		} catch(Exception e) {
 			fail();
 		}
